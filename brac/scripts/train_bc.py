@@ -44,7 +44,7 @@ flags.DEFINE_string('root_dir',
                     'Root directory for writing logs/summaries/checkpoints.')
 flags.DEFINE_string('sub_dir', 'auto', '')
 #flags.DEFINE_string('agent_name', 'brac_primal', 'agent name.')
-flags.DEFINE_string('env_name', 'halfcheetah-expert-v0', 'env name.')
+flags.DEFINE_string('env_name', 'halfcheetah-random-v0', 'env name.')
 flags.DEFINE_integer('seed', 0, 'random seed, mainly for training samples.')
 flags.DEFINE_integer('total_train_steps', int(5e5), '')
 flags.DEFINE_integer('n_eval_episodes', 20, '')

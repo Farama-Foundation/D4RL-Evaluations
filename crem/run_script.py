@@ -40,12 +40,12 @@ def evaluate_policy(policy, eval_episodes=10):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env_name", default="carla-lane-v0")              # OpenAI gym environment name
+    parser.add_argument("--env_name", default="halfcheetah-random-v0")              # OpenAI gym environment name
     parser.add_argument("--seed", default=0, type=int)                  # Sets Gym, PyTorch and Numpy seeds
     #parser.add_argument("--buffer_type", default="Robust")             # Prepends name to filename.
     parser.add_argument("--eval_freq", default=5e3, type=float)         # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=float)     # Max time steps to run environment for
-    parser.add_argument("--agent_name", default="conv_BCQ")
+    parser.add_argument("--agent_name", default="REM")
     parser.add_argument("--lr", default=1e-3, type=float)
     parser.add_argument("--num_heads", default=100, type=int)
     parser.add_argument("--prefix", default="default")

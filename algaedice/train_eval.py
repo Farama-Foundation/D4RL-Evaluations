@@ -44,7 +44,7 @@ gfile = tf.io.gfile
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('env_name', 'halfcheetah-expert-v0',
+flags.DEFINE_string('env_name', 'halfcheetah-random-v0',
                     'Environment for training/evaluation.')
 flags.DEFINE_integer('seed', 42, 'Fixed random seed for training.')
 flags.DEFINE_integer('sample_batch_size', 256, 'Batch size.')

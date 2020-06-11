@@ -15,7 +15,7 @@ arg_parser = None
 def parse_args(args):
     parser = argparse.ArgumentParser(description="Train or test control policies.")
 
-    parser.add_argument("--env", dest="env", default="")
+    parser.add_argument("--env", dest="env", default="halfcheetah-random-v0")
 
     parser.add_argument("--train", dest="train", action="store_true", default=True)
     parser.add_argument("--test", dest="train", action="store_false", default=True)
