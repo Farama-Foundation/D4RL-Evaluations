@@ -4,7 +4,6 @@ import torch
 import argparse
 import os
 import d4rl
-import d4rl.kitchen
 import uuid
 import json
 
@@ -13,6 +12,8 @@ import rem.DDPG as DDPG
 import rem.BCQ as BCQ
 import rem.TD3 as TD3
 import rem.REM as REM
+import rem.conv_REM as conv_REM
+import rem.conv_BCQ as conv_BCQ
 import rem.RSEM as RSEM
 import rem.DDPG_REM as DDPG_REM
 
@@ -39,18 +40,18 @@ def evaluate_policy(policy, eval_episodes=10):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env_name", default="Hopper-v1")              # OpenAI gym environment name
+    parser.add_argument("--env_name", default="halfcheetah-random-v0")              # OpenAI gym environment name
     parser.add_argument("--seed", default=0, type=int)                  # Sets Gym, PyTorch and Numpy seeds
     #parser.add_argument("--buffer_type", default="Robust")             # Prepends name to filename.
     parser.add_argument("--eval_freq", default=5e3, type=float)         # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=float)     # Max time steps to run environment for
-    parser.add_argument("--agent_name", default="TD3")
+    parser.add_argument("--agent_name", default="REM")
     parser.add_argument("--lr", default=1e-3, type=float)
     parser.add_argument("--num_heads", default=100, type=int)
     parser.add_argument("--prefix", default="default")
     parser.add_argument("--output_dir", default="results")
     args = parser.parse_args()
-    d4rl.set_dataset_path('/datasets')
+    #d4rl.set_dataset_path('/datasets')
 
     file_name = "%s_%s_%s_%s" % (args.agent_name, args.env_name, str(args.seed), str(args.lr))
     if args.agent_name == 'REM':
@@ -82,7 +83,7 @@ if __name__ == "__main__":
 
     # Initialize policy
     kwargs = {'lr': args.lr}
-    if args.agent_name in ['REM', 'RSEM', 'DDPG_REM']:
+    if args.agent_name in ['conv_REM', 'REM', 'RSEM', 'DDPG_REM']:
       kwargs.update(num_heads=args.num_heads)
     if args.agent_name == 'BCQ':
       policy_agent = BCQ.BCQ
@@ -90,6 +91,10 @@ if __name__ == "__main__":
       policy_agent = TD3.TD3
     elif args.agent_name == 'REM':
       policy_agent = REM.REM
+    elif args.agent_name == 'conv_REM':
+      policy_agent = conv_REM.REM
+    elif args.agent_name == 'conv_BCQ':
+      policy_agent = conv_BCQ.BCQ
     elif args.agent_name == 'RSEM':
       policy_agent = RSEM.RSEM
     elif args.agent_name == 'DDPG_REM':
@@ -104,13 +109,22 @@ if __name__ == "__main__":
     #replay_buffer.load(buffer_name)
     dataset = env.get_dataset()
     N = dataset['rewards'].shape[0]
+
+    episode_step = 0
     for i in range(N-1):
         obs = dataset['observations'][i]
         new_obs = dataset['observations'][i+1]
         action = dataset['actions'][i]
         reward = dataset['rewards'][i]
         done_bool = bool(dataset['terminals'][i])
-        replay_buffer.add((obs, new_obs, action, reward, done_bool))
+        # Don't apply terminals on the last step of an episode
+        if episode_step == env._max_episode_steps - 1:
+            episode_step = 0
+            continue  
+        if done_bool:
+            episode_step = 0
+        replay_buffer.add(obs, action, new_obs, reward, done_bool)
+        episode_step += 1
 
     evaluations = []
 

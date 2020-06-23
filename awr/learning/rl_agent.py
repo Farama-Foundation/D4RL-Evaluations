@@ -491,16 +491,16 @@ class RLAgent(abc.ABC):
             path.rewards.append(curr_r)
             #path.flags.append(curr_flags)
             path_len = path.pathlength()
-            done = (curr_term == 1) or (path_len == episode_max_len)
+            done = (curr_term == 1) or (path_len == (episode_max_len-1))
             if (done):
                 next_s = demo_next_obs[i]
                 #next_g = curr_g
                 path.states.append(next_s)
                 #path.goals.append(next_g)
-                if (curr_term == 1):
-                    path.terminate = rl_path.Terminate.Fail
-                else:
+                if path_len == (episode_max_len-1):
                     path.terminate = rl_path.Terminate.Null
+                else:
+                    path.terminate = rl_path.Terminate.Fail
                 self._replay_buffer.store(path)
                 self._record_normalizers(path)
                 curr_return = path.calc_return()

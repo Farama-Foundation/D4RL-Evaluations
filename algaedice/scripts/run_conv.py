@@ -158,10 +158,31 @@ def main(_):
   action = dataset["actions"][:N-1]
   reward = np.expand_dims(dataset["rewards"][:N-1], axis=-1)
   mask = np.expand_dims(dataset["terminals"][:N-1], axis=-1)
-  batch_size = 100
-  for i in tqdm(range(0, N-1, batch_size)):
-      data = (obs[i:i+batch_size], action[i:i+batch_size], next_obs[i:i+batch_size], reward[i:i+batch_size], mask[i:i+batch_size])
-      replay_buffer.add_batch(data)
+
+  episode_steps = 0
+  batch_obs = []
+  batch_actions = []
+  batch_next_obs = []
+  batch_reward = []
+  batch_mask = []
+  for i in tqdm(range(0, N-1)):
+     batch_obs.append(obs[i])
+     batch_actions.append(action[i])
+     batch_next_obs.append(next_obs[i])
+     batch_reward.append(reward[i])
+     batch_mask.append(mask[i])
+     episode_steps += 1
+
+     if episode_steps == max_episode_steps-1:
+       data = (batch_obs, batch_actions, batch_next_obs, batch_reward, batch_mask)
+       data = tuple([np.array(_d) for _d in data])
+       replay_buffer.add_batch(data)
+       episode_steps = 0
+       batch_obs = []
+       batch_actions = []
+       batch_next_obs = []
+       batch_reward = []
+       batch_mask = []
 
   hparam_str_dict = dict(seed=FLAGS.seed, env=FLAGS.env_name)
   hparam_str = ','.join([

@@ -104,13 +104,21 @@ def train_BCQ(env, state_dim, action_dim, max_action, device, output_dir, args):
     dataset = env.get_dataset()
     N = dataset['rewards'].shape[0]
     print('Loading buffer!')
+    episode_step = 0
     for i in range(N-1):
         obs = dataset['observations'][i]
         new_obs = dataset['observations'][i+1]
         action = dataset['actions'][i]
         reward = dataset['rewards'][i]
         done_bool = bool(dataset['terminals'][i])
+        # Don't apply terminals on the last step of an episode
+        if episode_step == env._max_episode_steps - 1:
+            episode_step = 0
+            continue  
+        if done_bool:
+            episode_step = 0
         replay_buffer.add(obs, action, new_obs, reward, done_bool)
+        episode_step += 1
     print('Loaded buffer')
     #replay_buffer.load(f"./buffers/{buffer_name}")
     
