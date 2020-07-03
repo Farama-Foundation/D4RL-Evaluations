@@ -1,12 +1,10 @@
-This codebase is built off of rlkit (https://github.com/vitchyr/rlkit/), and implements CQL. In order to run CQL, follow the installation instructions for rlkit as shown below, then install D4RL(https://github.com/rail-berkeley/d4rl), and for the kitchen tasks, please follow the instructions at: https://github.com/google-research/relay-policy-learning (as mentioned at https://github.com/rail-berkeley/d4rl/wiki/New-Franka-Kitchen-Tasks).
+This codebase is built off of rlkit (https://github.com/vitchyr/rlkit/), and implements BEAR. In order to run BEAR, follow the installation instructions for rlkit as shown below, then install D4RL(https://github.com/rail-berkeley/d4rl).
 
-Then in order to run CQL, an example command is:
+Then in order to run BEAR, an example command is:
 ```
-python examples/cql_hdf5_kitchen.py --env='kitchen-microwave-kettle-light-slider-v0' --policy_lr=3e-5 --min_q_version=3 --data_subtract="True" --min_q_weight=10.0 --deterministic_backup=True --gpu=1 --lagrange_thresh=5.0
+python examples/bear_hdf5_d4rl.py --env='halfcheetah-medium-v0' --policy_lr=1e-4 --num_samples=100
 ```
-where, `env` refers to a d4rl environment, `policy_lr` is the policy learning rate, `min_q_version` controls for CQL(H) vs CQL(rho), `data_subtract` includes the maximization term, `lagrange_thresh` specifies the threshold tau for Lagrangian optimization (for CQL (lagrange)).
-
-For a description of these hyperparameters, please refer to the launcher script: examples/cql_hdf5_kitchen.py (Comments in lines 170-179)
+where, `env` refers to a d4rl environment, `policy_lr` is the policy learning rate.
 
 Below is the exact unmodified readme from rlkit, for installation instructions.
 
