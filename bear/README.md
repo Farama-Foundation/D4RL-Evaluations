@@ -6,6 +6,11 @@ python examples/bear_hdf5_d4rl.py --env='halfcheetah-medium-v0' --policy_lr=1e-4
 ```
 where, `env` refers to a d4rl environment, `policy_lr` is the policy learning rate.
 
+We use the following hyperparameters for the results in the D4RL paper:
+- Hopper: `kernel_type=laplacian`, `mmd_sigma=20`, `num_samples=100`
+- Walker2d: `kernel_type=laplacian`, `mmd_sigma=20`, `num_samples=100`
+- HalfCheetah: `kernel_type=gaussian`, `mmd_sigma=20`, `num_samples=100`
+
 Below is the exact unmodified readme from rlkit, for installation instructions.
 
 # RLkit
