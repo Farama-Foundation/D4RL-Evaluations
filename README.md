@@ -1,6 +1,6 @@
-# d4rl_evaluations
+# D4RL Evaluations
 
-This repository contains the algorithms used to evaluate tasks in the [D4RL benchmark](https://github.com/rail-berkeley/d4rl). All code is lightly modified from other public repositories on Github.
+This repository contains the algorithms used to evaluate tasks in the [D4RL benchmark](https://github.com/Farama-Foundation/D4RL). All code is lightly modified from other public repositories on Github.
 
 ## Reference Codebases.
 
